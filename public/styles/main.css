@@ -1,12 +1,60 @@
 body {
-    background: #DDDDDD;
+    background:white;
 }
-
+h2{
+    margin-right: auto;
+    font-family:"Lucida Console";
+    font-size: 30px;
+    color: #2F2727;
+    padding-top: 5px;
+}
 .navbar {
-    background-color: #800000;
-    color: white;
+    background-color: #E0FFFF;
+    color: black;
 }
 
 .page-container {
     margin-top: 75px;
+}
+#signOutButton{
+    margin-left: auto;
+}
+.list-group-item {
+    cursor: pointer;
+}
+#Weeks{
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    justify-content: space-between;
+    align-items: center;
+}
+#ThisWeek,
+#NextWeek{
+    font-size: 1.5em;
+    height: 40%;
+    width: 80%;
+    background-color: #72C2CE;
+    border-radius: 12px;
+    color: #282E2D;
+    font-family:  "Segoe UI";
+}
+#indexPage{
+    margin-top: 100px;
+    height: 600px;
+}
+#firebaseui-auth-container{
+    margin-top: 200px;
+}
+#forward{
+    background-color: #6FDAFA;
+    color:#344A36;
+    height: 45px;
+    width: 180px;
+    margin: auto;
+    margin-top: 50px;
+    font-family:Garamond;
+    font-size: 15px;
+    display: none;
 }
