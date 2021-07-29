@@ -60,36 +60,40 @@ rhit.FbAuthManager = class {
 
 rhit.main = function () {
 
-
-	//sign in:
 	rhit.fbAuthManager = new rhit.FbAuthManager();
-	const forwardButton = document.querySelector("#forward");
-	rhit.fbAuthManager.beginListening(() => {
-		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
-		//display forward button
-		if (rhit.fbAuthManager.isSignedIn) {
-			const forwardButton = document.querySelector("#forward");
-			forwardButton.style.display = "block";
-		}else{
-			forwardButton.style.display = "none";
-		}
-	});
-	if (document.querySelector("#indexPage")) {
-		console.log("You are on the login page.");
-		new rhit.LoginPageController();
-	}
-	//redirect to week.html
-	forwardButton.onclick = ((event) => {
-		window.location.href = "/week.html";
-	})
+	rhit.initializePage();
 
-	//sign out:
-	document.querySelector("#signOutButton").addEventListener("click", (event) => {
-		rhit.fbAuthManager.signOut();
-	});
 
 }
+rhit.initializePage = function () {
+	const urlParams = new URLSearchParams(window.location.search);
+	//for indexPage
+	if (document.querySelector("#indexPage")) {
+		new rhit.LoginPageController();
+		console.log("You are on the login page.");
+		const uid = urlParams.get("uid");
+		const forwardButton = document.querySelector("#forward");
 
+		rhit.fbAuthManager.beginListening(() => {
+			console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
+			//display forward button
+			if (rhit.fbAuthManager.isSignedIn) {
+				const forwardButton = document.querySelector("#forward");
+				forwardButton.style.display = "block";
+			}else{
+				forwardButton.style.display = "none";
+			}
+		});
+			//redirect to week.html
+		forwardButton.onclick = ((event) => {
+		window.location.href = "/week.html";
+	})
+		//sign out:
+		document.querySelector("#signOutButton").addEventListener("click", (event) => {
+			rhit.fbAuthManager.signOut();
+		});
+	}
+};
 
 
 rhit.main();
