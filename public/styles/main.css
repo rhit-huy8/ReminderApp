@@ -22,8 +22,7 @@ h2{
 .list-group-item {
     cursor: pointer;
 }
-#Weeks,
-#Days {
+#Weeks {
     margin-top: 200px;
     display: flex;
     flex-direction: column;
@@ -31,9 +30,19 @@ h2{
     justify-content: space-between;
     align-items: center;
 }
+#Days {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    height: 300px;
+    justify-content: space-between;
+    align-items: center;
+
+}
 #ThisWeek,
 #NextWeek,
-.days {
+.day {
     font-size: 1.5em;
     height: 40%;
     width: 80%;
@@ -42,7 +51,7 @@ h2{
     color: #282E2D;
     font-family:  "Segoe UI";
 }
-.days {
+.day {
     padding: 20px;
     margin: 20px;
 }
