@@ -9,6 +9,27 @@ rhit.LoginPageController = class {
 	}
 }
 
+rhit.WeekPageController = class {
+	constructor() {
+
+	}
+	document.querySelectorAll(".week-button").onclick((event) => {
+		
+	})
+}
+
+rhit.DayPageController = class {
+	constructor() {
+
+	}
+}
+
+rhit.EventPageController = class {
+	constructor() {
+
+	}
+}
+
 
 rhit.FbAuthManager = class {
 	constructor() {
