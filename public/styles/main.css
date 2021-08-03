@@ -43,8 +43,7 @@ h2{
 }
 .day,
 #ThisWeek,
-#NextWeek,
-#addEvent {
+#NextWeek {
     font-size: 1.5em;
     height: 30%;
     width: 60%;
@@ -54,7 +53,7 @@ h2{
     font-family:  "Segoe UI";
     cursor: pointer;
 }
-.day, #addEvent {
+.day {
     padding: 20px;
     margin: 20px;
 }
@@ -98,4 +97,18 @@ h2{
 
 .bmd-layout-drawer > ul {
     background-color: #DDDDDD;
+}
+
+#fab {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    background-color: #2ad66c;
+    color: white;
+    z-index: 999;
+}
+
+#fab:active {
+    transform: translateY(2px);
+    opacity: 0.8;
 }
