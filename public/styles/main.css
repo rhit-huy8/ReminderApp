@@ -11,6 +11,7 @@ h2{
 .navbar {
     background-color: #E0FFFF;
     color: black;
+    font-family:  "Segoe UI";
 }
 
 .page-container {
@@ -53,6 +54,7 @@ h2{
 }
 #NextWeek {
     margin-bottom: 4em;
+    margin-top: 0;
 }
 #ThisWeek {
     margin-bottom: 0;
