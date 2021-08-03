@@ -51,6 +51,9 @@ h2{
     border-radius: 12px;
     color: #282E2D;
     font-family:  "Segoe UI";
+}
+#ThisWeek,
+#NextWeek {
     cursor: pointer;
 }
 .day {

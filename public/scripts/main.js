@@ -25,7 +25,11 @@ rhit.WeekPageController = class {
 		// clicking sign out on menu drawer
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
-			window.location.href = "/index.html"
+			window.location.href = "/index.html";
+		});
+		// clicking my contacts on menu drawer
+		document.querySelector("#menuContacts").addEventListener("click", (event) => {
+			window.location.href = "/contacts.html";
 		});
 	}
 	
@@ -36,11 +40,15 @@ rhit.DayPageController = class {
 		// clicking sign out on menu drawer
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
-			window.location.href = "/index.html"
+			window.location.href = "/index.html";
 		});
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
-			window.location.href = "/week.html"
+			window.location.href = "/week.html";
+		});
+		// clicking my contacts on menu drawer
+		document.querySelector("#menuContacts").addEventListener("click", (event) => {
+			window.location.href = "/contacts.html";
 		});
 	}
 }
