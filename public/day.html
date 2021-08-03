@@ -13,7 +13,7 @@
 
 <body>
     
-    <nav class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
+    <!-- <nav class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
         <header class="bmd-layout-header">
             <div class="navbar navbar-light bg-faded">
                 <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s2">
@@ -23,10 +23,33 @@
                 <h2>&nbsp;&nbsp;Days</h2>
             </div>
         </header>
-    </nav>
-<!-- drop down goes here -->
-    <!-- ... -->
-<!--  -->
+    </nav> -->
+
+    <!-- <nav class="navbar navbar-light fixed-top">
+        <a class="navbar-brand" href="#"><i class="material-icons">menu</i>&nbsp;&nbsp;Days</a>
+    </nav> -->
+
+    <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay">
+        <header class="bmd-layout-header">
+          <div class="navbar navbar-light bg-faded fixed-top justify-content-start">
+            <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s2">
+              <span class="sr-only">Toggle drawer</span>
+              <i class="material-icons">menu</i>
+            </button>
+            <a class="navbar-brand" href="#">&nbsp;&nbsp;Days</a>
+          </div>
+        </header>
+        <div id="dw-s2" class="bmd-layout-drawer bg-faded">
+          <header>
+            <a class="navbar-brand">Days</a>
+          </header>
+            <ul class="list-group">
+              <a id="menuWeeks" class="list-group-item"><i class="material-icons">people_alt</i>Weeks Page</a>
+              <a id="menuContacts" class="list-group-item"><i class="material-icons">people_alt</i>My Contacts</a>
+              <a id="menuSignOut" class="list-group-item"><i class="material-icons">login</i>Sign out</a>
+            </ul>
+        </div>
+
     <div id="Days">
         <button id="monday" class="day">Monday</button>
         <button id="tuesday" class="day">Tuesday</button>

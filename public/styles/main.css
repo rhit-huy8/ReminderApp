@@ -73,3 +73,26 @@ h2{
     font-size: 15px;
     display: none;
 }
+
+.bmd-layout-content, #Days {
+    height: 100vh;
+}
+
+.bmd-layout-drawer > header {
+    background-color: #72C2CE;
+    color: #282E2D;
+    font-family:  "Segoe UI";
+}
+
+.navbar-brand {
+    color: #282E2D;
+    font-family:  "Segoe UI";
+}
+
+.list-group-item :first-child {
+    margin-right: 0.75rem;
+}
+
+.bmd-layout-drawer > ul {
+    background-color: #DDDDDD;
+}

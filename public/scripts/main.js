@@ -11,16 +11,23 @@ rhit.LoginPageController = class {
 
 rhit.WeekPageController = class {
 	constructor() {
+		let thisWeekButton = document.querySelector("#ThisWeek");
+		let nextWeekButton = document.querySelector("#NextWeek");
 
+		thisWeekButton.onclick = ((event) => {
+			window.location.href = "/day.html";
+		});
+
+		nextWeekButton.onclick = ((event) => {
+			window.location.href = "/day.html";
+		});
 	}
-	document.querySelectorAll(".week-button").onclick((event) => {
-		
-	})
+	
 }
 
 rhit.DayPageController = class {
 	constructor() {
-
+		
 	}
 }
 
@@ -113,6 +120,13 @@ rhit.initializePage = function () {
 		document.querySelector("#signOutButton").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
 		});
+	}
+
+	if (document.querySelector("#Weeks")) {
+		new rhit.WeekPageController();
+	}
+	if (document.querySelector("#Days")) {
+		new rhit.DayPageController();
 	}
 };
 
