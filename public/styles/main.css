@@ -76,7 +76,7 @@ h2{
     display: none;
 }
 
-.bmd-layout-content, #Days, #Weeks {
+.bmd-layout-content, #Days, #Weeks, #Contacts, #Event {
     height: 100vh;
 }
 

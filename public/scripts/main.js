@@ -51,6 +51,20 @@ rhit.EventPageController = class {
 	}
 }
 
+rhit.ContactPageController = class {
+	constructor() {
+		// clicking sign out on menu drawer
+		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
+			rhit.fbAuthManager.signOut();
+			window.location.href = "/index.html"
+		});
+		// clicking weeks page on menu drawer
+		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
+			window.location.href = "/week.html"
+		});
+	}
+}
+
 
 rhit.FbAuthManager = class {
 	constructor() {
@@ -142,6 +156,9 @@ rhit.initializePage = function () {
 	}
 	if (document.querySelector("#Days")) {
 		new rhit.DayPageController();
+	}
+	if (document.querySelector("#Contacts")) {
+		new rhit.ContactPageController();
 	}
 };
 
