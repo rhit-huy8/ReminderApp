@@ -41,9 +41,10 @@ h2{
     align-items: center;
 
 }
+.day,
 #ThisWeek,
 #NextWeek,
-.day {
+#addEvent {
     font-size: 1.5em;
     height: 30%;
     width: 60%;
@@ -51,15 +52,9 @@ h2{
     border-radius: 12px;
     color: #282E2D;
     font-family:  "Segoe UI";
+    cursor: pointer;
 }
-#NextWeek {
-    margin-bottom: 4em;
-    margin-top: 0;
-}
-#ThisWeek {
-    margin-bottom: 0;
-}
-.day {
+.day, #addEvent {
     padding: 20px;
     margin: 20px;
 }
