@@ -44,12 +44,18 @@ h2{
 #NextWeek,
 .day {
     font-size: 1.5em;
-    height: 40%;
-    width: 80%;
+    height: 30%;
+    width: 60%;
     background-color: #72C2CE;
     border-radius: 12px;
     color: #282E2D;
     font-family:  "Segoe UI";
+}
+#NextWeek {
+    margin-bottom: 4em;
+}
+#ThisWeek {
+    margin-bottom: 0;
 }
 .day {
     padding: 20px;
@@ -74,7 +80,7 @@ h2{
     display: none;
 }
 
-.bmd-layout-content, #Days {
+.bmd-layout-content, #Days, #Weeks {
     height: 100vh;
 }
 
