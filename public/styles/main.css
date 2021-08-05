@@ -24,20 +24,20 @@ h2{
     cursor: pointer;
 }
 #Weeks {
-    margin-top: 200px;
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
-    height: 300px;
-    justify-content: space-between;
+    height: 260px;
+    justify-content: space-around;
     align-items: center;
 }
 #Days {
-    margin-top: 100px;
+    margin-top: 200px;
     margin-bottom: 100px;
     display: flex;
     flex-direction: column;
     height: 300px;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 
 }
