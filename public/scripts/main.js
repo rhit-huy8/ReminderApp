@@ -76,21 +76,17 @@ rhit.DayPageController = class {
 		document.querySelector("#submitAddEvent").onclick = (event) =>{
 			const name = document.querySelector("#inputEvent").value;
 			const time = document.querySelector("#inputTime").value;
-			//const day = document.querySelector("#inputDay").value;
 			const day = document.getElementById("inputDay");
 			const text = day.options[day.selectedIndex].text;
 			//move to the event page to add cards
 			console.log('name, time, text :>> ', name, time, text);
 			rhit.fbEventsManager.add(name,time,text,1);
-
-			window.location.href = "/event.html";
-
+			//try to use promise here!
+			//window.location.href = "/event.html";
 			console.log("doc added");
-					//start listening
-				
 		};
 		//fix beginListening
-		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
+		//rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 
 	}
 
