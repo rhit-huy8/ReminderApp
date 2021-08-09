@@ -51,11 +51,9 @@ h2{
     border-radius: 12px;
     color: #282E2D;
     font-family:  "Segoe UI";
-}
-#ThisWeek,
-#NextWeek {
     cursor: pointer;
 }
+
 .day {
     padding: 20px;
     margin: 20px;
@@ -114,4 +112,10 @@ h2{
 #fab:active {
     transform: translateY(2px);
     opacity: 0.8;
+}
+
+#Contacts {
+    margin-top: 5em;
+    text-align: center;
+    font-family:  "Segoe UI";
 }

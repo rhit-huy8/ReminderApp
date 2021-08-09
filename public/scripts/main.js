@@ -6,6 +6,10 @@ rhit.FB_KEY_WEEK = "week";
 rhit.FB_KEY_DAY = "day";
 rhit.fbEventsManager = null;
 
+rhit.FB_COLLECTION_USERS = "Users";
+rhit.FB_KEY_EMAIL = "emailAddress";
+rhit.FB_KEY_USERID = "uid";
+
 
 
 function htmlToElement(html){
@@ -73,6 +77,7 @@ rhit.DayPageController = class {
 				window.location.href = "/event.html";
 			});
 		});
+
 		document.querySelector("#submitAddEvent").onclick = (event) =>{
 			const name = document.querySelector("#inputEvent").value;
 			const time = document.querySelector("#inputTime").value;
@@ -134,7 +139,7 @@ rhit.FBEventsManager = class{
 	constructor() {
 		this._documentSnapshots = [];
 
-		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS = "Events");
+		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS);
 		this._ref.get()
 			.then((querySnapshot) => {
 				querySnapshot.forEach((doc) => {
