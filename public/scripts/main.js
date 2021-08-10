@@ -90,9 +90,20 @@ rhit.DayPageController = class {
 			//window.location.href = "/event.html";
 			console.log("doc added");
 		};
-		//fix beginListening
-		//rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 
+	}
+
+	
+}
+
+rhit.EventPageController = class {
+	constructor() {
+		console.log("event page constructed");
+		document.querySelector("#eventNav").addEventListener("click", (event) => {
+			window.location.href = "/day.html";
+			
+		});
+		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 	}
 
 	_createCard(e){
@@ -120,17 +131,6 @@ rhit.DayPageController = class {
 		oldList.hidden = true;
 
 		oldList.parentElement.appendChild(newList);
-	}
-}
-
-rhit.EventPageController = class {
-	constructor() {
-		console.log("event page constructed");
-		document.querySelector("#eventNav").addEventListener("click", (event) => {
-			window.location.href = "/day.html";
-			
-		});
-		
 	}
 
 }
@@ -276,6 +276,7 @@ rhit.FbAuthManager = class {
 rhit.main = function () {
 
 	rhit.fbAuthManager = new rhit.FbAuthManager();
+	rhit.fbEventsManager = new rhit.FBEventsManager();
 	rhit.initializePage();
 
 
@@ -315,7 +316,7 @@ rhit.initializePage = function () {
 		new rhit.WeekPageController();
 	}
 	if (document.querySelector("#Days")) {
-		rhit.fbEventsManager = new rhit.FBEventsManager();
+
 		new rhit.DayPageController();
 	}
 	if (document.querySelector("#Contacts")) {
