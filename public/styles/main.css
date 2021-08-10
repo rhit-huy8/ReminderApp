@@ -81,6 +81,10 @@ h2{
     height: 100vh;
 }
 
+#Event {
+    margin-top: 5em;
+}
+
 .bmd-layout-drawer > header {
     background-color: #72C2CE;
     color: #282E2D;
@@ -118,4 +122,14 @@ h2{
     margin-top: 5em;
     text-align: center;
     font-family:  "Segoe UI";
+}
+
+.card {
+    margin: 10px 0;
+}
+
+.card-title, .card-subtitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

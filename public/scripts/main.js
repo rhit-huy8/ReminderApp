@@ -70,13 +70,28 @@ rhit.DayPageController = class {
 			window.location.href = "/contacts.html";
 		});
 		//go to the event page
-		const buttons = document.querySelectorAll(".day");
-		buttons.forEach(function(button){
-			button.onclick= ((event) => {
-				console.log("done");
-				window.location.href = "/event.html";
-			});
+		document.querySelector("#monday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Monday";
 		});
+		document.querySelector("#tuesday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Tuesday";
+		});
+		document.querySelector("#wednesday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Wednesday";
+		});
+		document.querySelector("#thursday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Thursday";
+		});
+		document.querySelector("#friday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Friday";
+		});
+		document.querySelector("#saturday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Saturday";
+		});
+		document.querySelector("#sunday").addEventListener("click", (event) => {
+			window.location.href = "/event.html?day=Sunday";
+		});
+		
 
 		document.querySelector("#submitAddEvent").onclick = (event) =>{
 			const name = document.querySelector("#inputEvent").value;
@@ -119,11 +134,17 @@ rhit.EventPageController = class {
 		console.log("update something!");
 		const newList = htmlToElement('<div id="Event"></div>');
 		
+		const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		const day = urlParams.get("day");
+		
 		for(let i=0;i<rhit.fbEventsManager.length;i++){
-			const e = rhit.fbEventsManager.getEventAtIndex(i);
-			const newCard = this._createCard(e);
-			
-			newList.appendChild(newCard);
+			if(day == rhit.fbEventsManager.getEventAtIndex(i).day) {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createCard(e);
+				
+				newList.appendChild(newCard);
+			}
 		}
 		//remove the old one nad put the new one.
 		const oldList = document.querySelector("#Event");
