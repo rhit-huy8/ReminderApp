@@ -45,6 +45,10 @@ rhit.WeekPageController = class {
 			rhit.fbAuthManager.signOut();
 			window.location.href = "/index.html";
 		});
+		// clicking important events on menu drawer
+		document.querySelector("#menuImportant").addEventListener("click", (event) => {
+			window.location.href = "/importantevent.html";
+		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
 			window.location.href = "/contacts.html";
@@ -64,6 +68,10 @@ rhit.DayPageController = class {
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
 			window.location.href = "/week.html";
+		});
+		// clicking important events on menu drawer
+		document.querySelector("#menuImportant").addEventListener("click", (event) => {
+			window.location.href = "/importantevent.html";
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
@@ -126,6 +134,10 @@ rhit.EventPageController = class {
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
 			window.location.href = "/week.html";
+		});
+		// clicking important events on menu drawer
+		document.querySelector("#menuImportant").addEventListener("click", (event) => {
+			window.location.href = "/importantevent.html";
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
@@ -255,6 +267,28 @@ rhit.ContactPageController = class {
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
 			window.location.href = "/week.html"
 		});
+		// clicking important events on menu drawer
+		document.querySelector("#menuImportant").addEventListener("click", (event) => {
+			window.location.href = "/importantevent.html";
+		});
+	}
+}
+
+rhit.ImportantEventPageController = class {
+	constructor() {
+		// clicking sign out on menu drawer
+		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
+			rhit.fbAuthManager.signOut();
+			window.location.href = "/index.html"
+		});
+		// clicking weeks page on menu drawer
+		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
+			window.location.href = "/week.html"
+		});
+		// clicking my contacts on menu drawer
+		document.querySelector("#menuContacts").addEventListener("click", (event) => {
+			window.location.href = "/contacts.html";
+		});
 	}
 }
 
@@ -357,8 +391,10 @@ rhit.initializePage = function () {
 		new rhit.ContactPageController();
 	}
 	if(document.querySelector("#Event")){
-		
 		new rhit.EventPageController();
+	}
+	if(document.querySelector("#ImportantEvents")){
+		new rhit.ImportantEventPageController();
 	}
 };
 

@@ -77,7 +77,7 @@ h2{
     display: none;
 }
 
-.bmd-layout-content, #Days, #Weeks, #Contacts, #Event {
+.bmd-layout-content, #Days, #Weeks, #Contacts, #Event, #ImportantEvents {
     height: 100vh;
 }
 
@@ -122,6 +122,12 @@ h2{
     margin-top: 5em;
     text-align: center;
     font-family:  "Segoe UI";
+}
+
+#ImportantEvents {
+    margin-top: 5em;
+    font-family:  "Segoe UI";
+    padding-left: 2.5em;
 }
 
 .card {

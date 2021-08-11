@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles/bootstrap-material-design.min.css">
   <link rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
   <link rel="stylesheet" href="styles/main.css">
-  <title>Reminder > Weeks</title>
+  <title>Important Events</title>
 </head>
 
 <body>
@@ -31,26 +31,37 @@
               <span class="sr-only">Toggle drawer</span>
               <i class="material-icons">menu</i>
             </button>
-            <a class="navbar-brand" href="#">&nbsp;&nbsp;Weeks</a>
+            <a id="eventNav" class="navbar-brand" href="#">&nbsp;&nbsp;Important Events</a>
           </div>
         </header>
         <div id="dw-s2" class="bmd-layout-drawer bg-faded">
           <header>
-            <a class="navbar-brand">Weeks</a>
+            <a class="navbar-brand">Important Events</a>
           </header>
             <ul class="list-group">
-              <!-- <a id="menuWeeks" class="list-group-item"><i class="material-icons">people_alt</i>Weeks Page</a> -->
+              <a id="menuWeeks" class="list-group-item"><i class="material-icons">calendar_view_week</i>Weeks Page</a>
               <a id="menuContacts" class="list-group-item"><i class="material-icons">people_alt</i>My Contacts</a>
-              <a id="menuImportant" class="list-group-item"><i class="material-icons">flag</i>Important Events</a>
               <a id="menuSignOut" class="list-group-item"><i class="material-icons">login</i>Sign out</a>
             </ul>
         </div>
 
 
 
-    <div id="Weeks">
-        <button class="week-button" id="ThisWeek">This Week</button>
-        <button class="week-button" id="NextWeek">Next Week</button>
+    <div id="ImportantEvents">
+        <h1>Monday:</h1>
+        <div id="monImp"></div>
+        <h1>Tuesday:</h1>
+        <div id="tuesImp"></div>
+        <h1>Wednesday:</h1>
+        <div id="wedImp"></div>
+        <h1>Thursday:</h1>
+        <div id="thursImp"></div>
+        <h1>Friday:</h1>
+        <div id="friImp"></div>
+        <h1>Saturday:</h1>
+        <div id="satImp"></div>
+        <h1>Sunday:</h1>
+        <div id="sunImp"></div>
     </div>
 
 
