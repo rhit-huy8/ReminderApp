@@ -5,12 +5,14 @@ rhit.FB_KEY_TIME = "time";
 rhit.FB_KEY_WEEK = "week";
 rhit.FB_KEY_DAY = "day";
 rhit.FB_KEY_IMPORTANT = "important";
+rhit.FB_KEY_AUTHOR = "author";
 rhit.fbEventsManager = null;
 
 rhit.FB_COLLECTION_USERS = "Users";
 rhit.FB_KEY_EMAIL = "emailAddress";
 rhit.FB_KEY_USERID = "uid";
 
+rhit.WEEK = 0;
 
 
 function htmlToElement(html){
@@ -34,11 +36,13 @@ rhit.WeekPageController = class {
 		let nextWeekButton = document.querySelector("#NextWeek");
 
 		thisWeekButton.onclick = ((event) => {
-			window.location.href = "/day.html";
+			rhit.WEEK = 1;
+			window.location.href= `/day.html?uid=${rhit.fbAuthManager.uid}&week=${rhit.WEEK}`;
 		});
 
 		nextWeekButton.onclick = ((event) => {
-			window.location.href = "/day.html";
+			rhit.WEEK = 2;
+			window.location.href= `/day.html?uid=${rhit.fbAuthManager.uid}&week=${rhit.WEEK}`;
 		});
 
 		// clicking sign out on menu drawer
@@ -48,11 +52,11 @@ rhit.WeekPageController = class {
 		});
 		// clicking important events on menu drawer
 		document.querySelector("#menuImportant").addEventListener("click", (event) => {
-			window.location.href = "/importantevent.html";
+			window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
-			window.location.href = "/contacts.html";
+			window.location.href= `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 	}
 	
@@ -60,6 +64,9 @@ rhit.WeekPageController = class {
 
 rhit.DayPageController = class {
 	constructor() {
+		const urlParams = new URLSearchParams(window.location.search);
+		const week = parseInt(urlParams.get("week"));
+		console.log('rhit.WEEK :>> ', week);
 		// clicking sign out on menu drawer
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
@@ -68,37 +75,37 @@ rhit.DayPageController = class {
 		});
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
-			window.location.href = "/week.html";
+			window.location.href= `/week.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking important events on menu drawer
 		document.querySelector("#menuImportant").addEventListener("click", (event) => {
-			window.location.href = "/importantevent.html";
+			window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
-			window.location.href = "/contacts.html";
+			window.location.href= `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		//go to the event page
 		document.querySelector("#monday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Monday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Monday`;
 		});
 		document.querySelector("#tuesday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Tuesday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Tuesday`;
 		});
 		document.querySelector("#wednesday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Wednesday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Wednesday`;
 		});
 		document.querySelector("#thursday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Thursday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Thursday`;
 		});
 		document.querySelector("#friday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Friday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Friday`;
 		});
 		document.querySelector("#saturday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Saturday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Saturday`;
 		});
 		document.querySelector("#sunday").addEventListener("click", (event) => {
-			window.location.href = "/event.html?day=Sunday";
+			window.location.href= `/event.html?uid=${rhit.fbAuthManager.uid}&week=${week}&day=Sunday`;
 		});
 		
 
@@ -110,12 +117,11 @@ rhit.DayPageController = class {
 			const important = document.querySelector("#gridCheck").value;
 			//move to the event page to add cards
 			console.log('name, time, text :>> ', name, time, text);
-			rhit.fbEventsManager.add(name,time,text,1,important);
+			rhit.fbEventsManager.add(name,time,text,week,important);
 			//try to use promise here!
 			//window.location.href = "/event.html";
 			console.log("doc added");
 		};
-
 	}
 
 	
@@ -123,10 +129,12 @@ rhit.DayPageController = class {
 
 rhit.EventPageController = class {
 	constructor() {
+		const urlParams = new URLSearchParams(window.location.search);
+		const week = parseInt(urlParams.get("week"));
 		console.log("event page constructed");
 		document.querySelector("#eventNav").addEventListener("click", (event) => {
 			window.location.href = "/day.html";
-			
+			window.location.href= `/day.html?uid=${rhit.fbAuthManager.uid}&week=${week}`;
 		});
 		// clicking sign out on menu drawer
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
@@ -135,15 +143,15 @@ rhit.EventPageController = class {
 		});
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
-			window.location.href = "/week.html";
+			window.location.href= `/week.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking important events on menu drawer
 		document.querySelector("#menuImportant").addEventListener("click", (event) => {
-			window.location.href = "/importantevent.html";
+			window.location.href = `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
-			window.location.href = "/contacts.html";
+			window.location.href = `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 	}
@@ -158,7 +166,6 @@ rhit.EventPageController = class {
 	}
 
 	updateList(){
-		console.log("update something!");
 		const newList = htmlToElement('<div id="Event"></div>');
 		
 		const queryString = window.location.search;
@@ -182,11 +189,11 @@ rhit.EventPageController = class {
 	}
 
 }
-//in the dayController
-rhit.FBEventsManager = class{
-	constructor() {
-		this._documentSnapshots = [];
 
+rhit.FBEventsManager = class{
+	constructor(uid) {
+		this._uid = uid;
+		this._documentSnapshots = [];
 		this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS);
 		this._ref.get()
 			.then((querySnapshot) => {
@@ -210,7 +217,8 @@ rhit.FBEventsManager = class{
 			[rhit.FB_KEY_TIME]: time,
 			[rhit.FB_KEY_DAY]: day ,
 			[rhit.FB_KEY_WEEK]: week,
-			[rhit.FB_KEY_IMPORTANT]: important
+			//[rhit.FB_KEY_IMPORTANT]: important,
+			[rhit.FB_KEY_AUTHOR]: rhit.fbAuthManager.uid
 		})
 			.then((docRef) => {
 				console.log("Document written with ID: ", docRef.id);
@@ -221,9 +229,12 @@ rhit.FBEventsManager = class{
 	}
 	beginListening(changeListener) {
 		let query = this._ref.limit(30);
-		// if(this._uid){
-		// 	query = query.where(rhit.FB_KEY_AUTHOR,"==",this._uid);
-		// }
+
+		if(this._uid){
+			console.log(this._uid);
+			console.log(rhit.FB_KEY_AUTHOR);
+			query = query.where(rhit.FB_KEY_AUTHOR,"==",this._uid);
+		}
 
 		this._unsubscribe = query.onSnapshot((querySnapshot)=>{
 
@@ -328,6 +339,7 @@ rhit.ImportantEventPageController = class {
 
 rhit.FbAuthManager = class {
 	constructor() {
+		
 		this._user = null;
 		this._name = "";
 	}
@@ -374,38 +386,37 @@ rhit.FbAuthManager = class {
 }
 
 
+rhit.checkForRedirects=function(){
+	if(document.querySelector("#indexPage") && rhit.fbAuthManager.isSignedIn){
+		console.log("should redirect me");
+		window.location.href= `/week.html?uid=${rhit.fbAuthManager.uid}`;
+	}
+	if(!document.querySelector("#indexPage") && !rhit.fbAuthManager.isSignedIn){
+		window.location.href="/index.html";
+	}
+};
+
 rhit.main = function () {
 
 	rhit.fbAuthManager = new rhit.FbAuthManager();
-	rhit.fbEventsManager = new rhit.FBEventsManager();
-	rhit.initializePage();
+	rhit.fbAuthManager.beginListening(() => {
+		//console.log("uid: ", rhit.fbAuthManager.uid);
+		rhit.checkForRedirects();
+		rhit.initializePage();
+	});
+	
+	
 
 
 }
 rhit.initializePage = function () {
 	const urlParams = new URLSearchParams(window.location.search);
+	const uid = urlParams.get("uid");
+	rhit.fbEventsManager = new rhit.FBEventsManager(uid);
 	//for indexPage
 	if (document.querySelector("#indexPage")) {
 		new rhit.LoginPageController();
-		console.log("You are on the login page.");
-		const uid = urlParams.get("uid");
-		const forwardButton = document.querySelector("#forward");
 
-		rhit.fbAuthManager.beginListening(() => {
-			console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
-			//display forward button
-			if (rhit.fbAuthManager.isSignedIn) {
-				const forwardButton = document.querySelector("#forward");
-				forwardButton.style.display = "block";
-			}else{
-				forwardButton.style.display = "none";
-			}
-		});
-			//redirect to week.html
-		//console.log('rhit.fbAuthManager.name :>> ', rhit.fbAuthManager.name);
-		forwardButton.onclick = ((event) => {
-		window.location.href = "/week.html";
-	})
 		//sign out:
 		document.querySelector("#signOutButton").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
@@ -414,6 +425,7 @@ rhit.initializePage = function () {
 	}
 
 	if (document.querySelector("#Weeks")) {
+		console.log("isSignedIn = ", rhit.fbAuthManager.isSignedIn);
 		new rhit.WeekPageController();
 	}
 	if (document.querySelector("#Days")) {
