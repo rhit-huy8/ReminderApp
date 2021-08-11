@@ -167,7 +167,7 @@ rhit.EventPageController = class {
 		//TODO: implment updates and delete
 
 		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
-		
+
 		//important button
 		// document.querySelector("#cardsImportant").onclick = (event) =>{
 		// 	//change the color of the icon
@@ -327,11 +327,11 @@ rhit.ContactPageController = class {
 		});
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
-			window.location.href = "/week.html"
+			window.location.href= `/week.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking important events on menu drawer
 		document.querySelector("#menuImportant").addEventListener("click", (event) => {
-			window.location.href = "/importantevent.html";
+			window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 	}
 }
@@ -345,11 +345,11 @@ rhit.ImportantEventPageController = class {
 		});
 		// clicking weeks page on menu drawer
 		document.querySelector("#menuWeeks").addEventListener("click", (event) => {
-			window.location.href = "/week.html"
+			window.location.href= `/week.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		// clicking my contacts on menu drawer
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
-			window.location.href = "/contacts.html";
+			window.location.href= `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 		rhit.fbEventsManager.beginListening(this.updateImportantList.bind(this));
 	}
