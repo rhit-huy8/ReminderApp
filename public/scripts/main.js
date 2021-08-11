@@ -4,6 +4,7 @@ rhit.FB_KEY_NAME = "name";
 rhit.FB_KEY_TIME = "time";
 rhit.FB_KEY_WEEK = "week";
 rhit.FB_KEY_DAY = "day";
+rhit.FB_KEY_IMPORTANT = "important";
 rhit.fbEventsManager = null;
 
 rhit.FB_COLLECTION_USERS = "Users";
@@ -106,9 +107,10 @@ rhit.DayPageController = class {
 			const time = document.querySelector("#inputTime").value;
 			const day = document.getElementById("inputDay");
 			const text = day.options[day.selectedIndex].text;
+			const important = document.querySelector("#gridCheck").value;
 			//move to the event page to add cards
 			console.log('name, time, text :>> ', name, time, text);
-			rhit.fbEventsManager.add(name,time,text,1);
+			rhit.fbEventsManager.add(name,time,text,1,important);
 			//try to use promise here!
 			//window.location.href = "/event.html";
 			console.log("doc added");
@@ -208,6 +210,7 @@ rhit.FBEventsManager = class{
 			[rhit.FB_KEY_TIME]: time,
 			[rhit.FB_KEY_DAY]: day ,
 			[rhit.FB_KEY_WEEK]: week,
+			[rhit.FB_KEY_IMPORTANT]: important
 		})
 			.then((docRef) => {
 				console.log("Document written with ID: ", docRef.id);
@@ -242,17 +245,19 @@ rhit.FBEventsManager = class{
 			docSnapshot.get(rhit.FB_KEY_TIME),
 			docSnapshot.get(rhit.FB_KEY_DAY),
 			1,
+			docSnapshot.get(rhit.FB_KEY_IMPORTANT)
 		);
 		return e;
 	  }
 }
 rhit.Event = class{
-	constructor(id, name, time, day, week){
+	constructor(id, name, time, day, week, important){
 		this.id = id;
 		this.name = name;
 		this.time = time;
 		this.day = day;
 		this.week = week;
+		this.important = important;
 	}
 }
 
@@ -289,6 +294,34 @@ rhit.ImportantEventPageController = class {
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
 			window.location.href = "/contacts.html";
 		});
+		rhit.fbEventsManager.beginListening(this.updateImportantList.bind(this));
+	}
+	_createImportantCard(e){
+		return htmlToElement(`<div class="card">
+		<div class="card-body">
+		  <h5 class="card-title">${e.name}</h5>
+		  <h6 class="card-subtitle mb-2 text-muted">${e.time}</h6>
+		</div>
+	  </div>`);
+	}
+	updateImportantList(){
+		console.log("update something!");
+		const newList = htmlToElement('<div id="Event"></div>');
+		
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important) {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				
+				newList.appendChild(newCard);
+			}
+		}
+		//remove the old one nad put the new one.
+		const oldList = document.querySelector("#ImportantEvents");
+		// oldList.removeAttribute("id");
+		// oldList.hidden = true;
+
+		oldList.parentElement.appendChild(newList);
 	}
 }
 
