@@ -139,3 +139,13 @@ h2{
     overflow: hidden;
     text-overflow: ellipsis;
 }
+#cardsDropDown{
+    background-color: lightblue;
+    display: block;
+    margin: auto auto auto auto;
+    flex: auto;
+}
+#cardContainer{
+    display:flex;
+    justify-content: space-between;
+}

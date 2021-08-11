@@ -136,6 +136,7 @@ rhit.EventPageController = class {
 			window.location.href = "/day.html";
 			window.location.href= `/day.html?uid=${rhit.fbAuthManager.uid}&week=${week}`;
 		});
+
 		// clicking sign out on menu drawer
 		document.querySelector("#menuSignOut").addEventListener("click", (event) => {
 			rhit.fbAuthManager.signOut();
@@ -153,15 +154,47 @@ rhit.EventPageController = class {
 		document.querySelector("#menuContacts").addEventListener("click", (event) => {
 			window.location.href = `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
+
+		//TODO: to pick specific event to edit
+		document.querySelector("#submitEditEvent").onclick = (event) =>{
+			const name = document.querySelector("#editEvent").value;
+			const time = document.querySelector("#editTime").value;
+			
+			//TODO:update    (how to pass in the id)
+			//rhit.fbEventsManager.getEventWithID().update(name,time);
+		};
+
+		//TODO: implment updates and delete
+
 		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
+		
+		//important button
+		// document.querySelector("#cardsImportant").onclick = (event) =>{
+		// 	//change the color of the icon
+		// 	document.querySelector("#importance").innerHTML = "star";
+		// };
 	}
 
 	_createCard(e){
 		return htmlToElement(`<div class="card">
         <div class="card-body">
-          <h5 class="card-title">${e.name}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">${e.time}</h6>
-        </div>
+			<div id="cardContainer">
+          		<h5 id="${e.id}" class="card-title">${e.name}</h5>
+	
+		  		<div class="dropdown">
+		  			<button id="cardsDropDown" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Action
+		  			</button>
+		  		<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+					<button id="cardsEdit" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i class="material-icons">edit</i>&nbsp;&nbsp;&nbsp;Edit</button>
+					<button id="cardsDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
+					<button id="cardsImportant" class="dropdown-item" type="button"><i id="importance" class="material-icons">star_border</i>&nbsp;&nbsp;&nbsp;Important</button>
+		  		</div>
+			</div>
+		</div>
+
+        <h6 class="card-subtitle mb-2 text-muted">${e.time}</h6>
+		</div>
       </div>`);
 	}
 
@@ -256,6 +289,19 @@ rhit.FBEventsManager = class{
 			docSnapshot.get(rhit.FB_KEY_TIME),
 			docSnapshot.get(rhit.FB_KEY_DAY),
 			1,
+			docSnapshot.get(rhit.FB_KEY_IMPORTANT)
+		);
+		return e;
+	  }
+	  //TODO: implement this method
+	  getEventWithID(id) { 
+		const docSnapshot = this._documentSnapshots[index];
+		const e = new rhit.Event(
+			docSnapshot.id,
+			docSnapshot.get(rhit.FB_KEY_NAME),
+			docSnapshot.get(rhit.FB_KEY_TIME),
+			docSnapshot.get(rhit.FB_KEY_DAY),
+			rhit.WEEK,
 			docSnapshot.get(rhit.FB_KEY_IMPORTANT)
 		);
 		return e;
