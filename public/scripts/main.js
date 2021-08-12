@@ -155,16 +155,12 @@ rhit.EventPageController = class {
 			window.location.href = `/contacts.html?uid=${rhit.fbAuthManager.uid}`;
 		});
 
-		//TODO: to pick specific event to edit
+
 		document.querySelector("#submitEditEvent").onclick = (event) =>{
 			const name = document.querySelector("#editEvent").value;
 			const time = document.querySelector("#editTime").value;
 			
-			//TODO:update    (how to pass in the id)
-			//rhit.fbEventsManager.getEventWithID().update(name,time);
 		};
-
-		//TODO: implment updates and delete
 
 		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 
@@ -231,27 +227,38 @@ rhit.EventPageController = class {
 		}
 		//delete icon
 		const deleteButtons = document.querySelectorAll("#cardsDelete");
-		deleteButtons.forEach((button) => {
-			button.onclick = (event) =>{
+		for(let i=0; i<deleteButtons.length; i++){
+			deleteButtons[i].onclick = (event) =>{
 				console.log("pressed delete");
+				//TODO: implement delete
 			};
-		})
+		}
+		//edit icon
+		const editButtons = document.querySelectorAll("#cardsEdit");
+		for(let i=0; i<editButtons.length; i++){
+			editButtons[i].onclick = (event) =>{
+				console.log("pressed edit");
+				//TODO: implement edit
+			};
+		}
 	}
 	updateImportance(id){
 		 
 		let ref = rhit.fbEventsManager._ref.doc(id);
 		this.helping(id);
-		if(this.isImportance(id)){
-			ref.update({
-					[rhit.FB_KEY_IMPORTANT]:false,
-				});
-				this.helping(id);
-		}else{
-			ref.update({
-				[rhit.FB_KEY_IMPORTANT]:true,
-			});
-			this.helping(id);
-		}
+		// if(this.isImportance(id)){
+		// 	ref.update({
+		// 			[rhit.FB_KEY_IMPORTANT]:false,
+		// 		}).then(() => {
+		// 			this.helping(id);
+		// 		});
+		// }else{
+		// 	ref.update({
+		// 		[rhit.FB_KEY_IMPORTANT]:true,
+		// 	}).then(() => {
+		// 		this.helping(id);
+		// 	});
+		// }
 	}
 
 	//return if it's important
