@@ -223,6 +223,14 @@ rhit.EventPageController = class {
 				console.log('id :>> ', id);
 				this.updateImportance(id);
 				//update html as well
+				let text = document.querySelector("#importance").innerHTML;
+				if(text == "star"){
+					text = "star_border";
+					console.log(text);
+				}else{
+					text = "star_border";
+					console.log(text);
+				}
 			};
 		}
 		//delete icon
@@ -244,29 +252,20 @@ rhit.EventPageController = class {
 	}
 	updateImportance(id){
 		 
-		let ref = rhit.fbEventsManager._ref.doc(id);
-		this.helping(id);
+		let ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS).doc(id);
 		// if(this.isImportant(id)){
-		// 		ref.update({
-		// 			[rhit.FB_KEY_IMPORTANT]:false,
-		// 		}).then(() => {
-		// 			this.helping(id);
-		// 		});
-		// }else{
-		// 		ref.update({
-		// 			[rhit.FB_KEY_IMPORTANT]:true,
-		// 		}).then(() => {
-		// 			this.helping(id);
-		// 		});
-		// }
+
+		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
+			const e =  documentSnapshot.get(rhit.FB_KEY_IMPORTANT);
+			ref.update({
+				[rhit.FB_KEY_IMPORTANT]: !e,
+			}).then(() => {
+				this.helping(id);
+			});
+		});
+
 	}
 
-	//return if it's important
-	isImportant(id){
-		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
-			return documentSnapshot.get(rhit.FB_KEY_IMPORTANT);
-		});
-	}
 	helping(id){
 		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
 			console.log(documentSnapshot.get(rhit.FB_KEY_IMPORTANT));
