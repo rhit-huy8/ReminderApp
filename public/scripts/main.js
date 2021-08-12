@@ -246,23 +246,23 @@ rhit.EventPageController = class {
 		 
 		let ref = rhit.fbEventsManager._ref.doc(id);
 		this.helping(id);
-		// if(this.isImportance(id)){
-		// 	ref.update({
+		// if(this.isImportant(id)){
+		// 		ref.update({
 		// 			[rhit.FB_KEY_IMPORTANT]:false,
 		// 		}).then(() => {
 		// 			this.helping(id);
 		// 		});
 		// }else{
-		// 	ref.update({
-		// 		[rhit.FB_KEY_IMPORTANT]:true,
-		// 	}).then(() => {
-		// 		this.helping(id);
-		// 	});
+		// 		ref.update({
+		// 			[rhit.FB_KEY_IMPORTANT]:true,
+		// 		}).then(() => {
+		// 			this.helping(id);
+		// 		});
 		// }
 	}
 
 	//return if it's important
-	isImportance(id){
+	isImportant(id){
 		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
 			return documentSnapshot.get(rhit.FB_KEY_IMPORTANT);
 		});
