@@ -208,6 +208,7 @@ rhit.EventPageController = class {
 				const newCard = this._createCard(e);
 				
 				newList.appendChild(newCard);
+				
 			}
 		}
 		//remove the old one nad put the new one.
@@ -217,22 +218,22 @@ rhit.EventPageController = class {
 
 		oldList.parentElement.appendChild(newList);
 
-		console.log('object :>> ', document.querySelector("#cardsEdit"));
-		console.log('object :>> ', document.querySelector("#cardsDelete"));
-		console.log('object :>> ', document.querySelector("#cardsImportant"));
-		document.querySelector("#cardsImportant").onclick = (event) =>{
-			//change the color of the icon
-			if(this.checkImportanceInside()){
-				document.querySelector("#importance").innerHTML = "star_border";
-			}else{			
-				document.querySelector("#importance").innerHTML = "star";
-		}
-		};	
+		//The Important icon
+		const importantButtons = document.querySelectorAll("#cardsImportant");
+		importantButtons.forEach((button) => {
+			button.onclick = (event) =>{
+				console.log("pressed important");
+			};
+		})
+		//delete icon
+		const deleteButtons = document.querySelectorAll("#cardsDelete");
+		deleteButtons.forEach((button) => {
+			button.onclick = (event) =>{
+				console.log("pressed delete");
+			};
+		})
 	}
 
-	checkImportanceInside(){
-		return document.querySelector("#importance").innerHTML == "star";
-	}
 }
 
 rhit.FBEventsManager = class{
