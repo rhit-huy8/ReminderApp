@@ -220,11 +220,15 @@ rhit.EventPageController = class {
 
 		//The Important icon
 		const importantButtons = document.querySelectorAll("#cardsImportant");
-		importantButtons.forEach((button) => {
-			button.onclick = (event) =>{
+		for(let i=0; i<importantButtons.length; i++){
+			importantButtons[i].onclick = (event) =>{
 				console.log("pressed important");
+				const id = document.getElementsByClassName("card-title")[i].id;
+				console.log('id :>> ', id);
+				this.updateImportance(id);
+				//update html as well
 			};
-		})
+		}
 		//delete icon
 		const deleteButtons = document.querySelectorAll("#cardsDelete");
 		deleteButtons.forEach((button) => {
@@ -232,6 +236,34 @@ rhit.EventPageController = class {
 				console.log("pressed delete");
 			};
 		})
+	}
+	updateImportance(id){
+		 
+		let ref = rhit.fbEventsManager._ref.doc(id);
+		this.helping(id);
+		if(this.isImportance(id)){
+			ref.update({
+					[rhit.FB_KEY_IMPORTANT]:false,
+				});
+				this.helping(id);
+		}else{
+			ref.update({
+				[rhit.FB_KEY_IMPORTANT]:true,
+			});
+			this.helping(id);
+		}
+	}
+
+	//return if it's important
+	isImportance(id){
+		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
+			return documentSnapshot.get(rhit.FB_KEY_IMPORTANT);
+		});
+	}
+	helping(id){
+		rhit.fbEventsManager._ref.doc(id).get().then((documentSnapshot) => {
+			console.log(documentSnapshot.get(rhit.FB_KEY_IMPORTANT));
+		});
 	}
 
 }
@@ -263,7 +295,7 @@ rhit.FBEventsManager = class{
 			[rhit.FB_KEY_TIME]: time,
 			[rhit.FB_KEY_DAY]: day ,
 			[rhit.FB_KEY_WEEK]: week,
-			//[rhit.FB_KEY_IMPORTANT]: important,
+			[rhit.FB_KEY_IMPORTANT]: false,
 			[rhit.FB_KEY_AUTHOR]: rhit.fbAuthManager.uid
 		})
 			.then((docRef) => {
