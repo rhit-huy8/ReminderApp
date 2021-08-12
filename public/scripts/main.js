@@ -168,11 +168,8 @@ rhit.EventPageController = class {
 
 		rhit.fbEventsManager.beginListening(this.updateList.bind(this));
 
-		//important button
-		// document.querySelector("#cardsImportant").onclick = (event) =>{
-		// 	//change the color of the icon
-		// 	document.querySelector("#importance").innerHTML = "star";
-		// };
+
+
 	}
 
 	_createCard(e){
@@ -219,8 +216,23 @@ rhit.EventPageController = class {
 		oldList.hidden = true;
 
 		oldList.parentElement.appendChild(newList);
+
+		console.log('object :>> ', document.querySelector("#cardsEdit"));
+		console.log('object :>> ', document.querySelector("#cardsDelete"));
+		console.log('object :>> ', document.querySelector("#cardsImportant"));
+		document.querySelector("#cardsImportant").onclick = (event) =>{
+			//change the color of the icon
+			if(this.checkImportanceInside()){
+				document.querySelector("#importance").innerHTML = "star_border";
+			}else{			
+				document.querySelector("#importance").innerHTML = "star";
+		}
+		};	
 	}
 
+	checkImportanceInside(){
+		return document.querySelector("#importance").innerHTML == "star";
+	}
 }
 
 rhit.FBEventsManager = class{
