@@ -234,18 +234,24 @@ rhit.EventPageController = class {
 		for(let i=0; i<deleteButtons.length; i++){
 			deleteButtons[i].onclick = (event) =>{
 				console.log("pressed delete");
-				//TODO: implement delete
 				const id = document.getElementsByClassName("card-title")[i].id;
 				this.delete(id);
 			};
 		}
+
 		//edit icon
 		const editButtons = document.querySelectorAll("#cardsEdit");
 		for(let i=0; i<editButtons.length; i++){
 			editButtons[i].onclick = (event) =>{
 				console.log("pressed edit");
-				//TODO: implement edit
+				document.querySelector("#submitEditEvent").onclick = (event) =>{
+					const id = document.getElementsByClassName("card-title")[i].id;
+					const name = document.querySelector("#editEvent").value;
+					const time = document.querySelector("#editTime").value;
+					this.updateEvent(id,name,time);
+				};
 			};
+				
 		}
 	}
 	updateImportance(id){
@@ -271,6 +277,7 @@ rhit.EventPageController = class {
 	}
 	//TODO:needs fix
 	updateIcon(text,id){
+
 		if(text == "star"){
 			document.querySelector(`#importance${id}`).innerHTML = "star_border";
 			console.log(document.querySelector(`#importance${id}`).innerHTML);
@@ -278,6 +285,20 @@ rhit.EventPageController = class {
 			document.querySelector(`#importance${id}`).innerHTML = "star";
 			console.log(document.querySelector(`#importance${id}`).innerHTML);
 		}
+	}
+
+	updateEvent(id,name,time){
+		let ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS).doc(id);
+		ref.update({
+			[rhit.FB_KEY_NAME]: name,
+			[rhit.FB_KEY_TIME]: time
+		})
+			.then(() => {
+				console.log("updated!");
+			})
+			.catch((error) => {
+				console.error("Error updating document: ", error);
+			});
 	}
 
 	delete(id) {
