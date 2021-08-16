@@ -433,7 +433,6 @@ rhit.ContactPageController = class {
 		let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
 		docRef.get().then((doc) => {
 			if (doc.exists) {
-				
 				let friends = [];
 				for(let i=0;i<doc.get(rhit.FB_KEY_FRIENDSLIST).length;i++){
 					console.log( doc.get(rhit.FB_KEY_FRIENDSLIST)[i]);
@@ -510,7 +509,7 @@ rhit.ImportantEventPageController = class {
 		<div class="card-body">
 		  <h5 class="card-title">${e.name}</h5>
 		  <h6 class="card-subtitle mb-2 text-muted">${e.time}</h6>
-		  <h6 class="card-subtitle mb-2 text-muted">${e.week}</h6>
+		  <h6 class="card-subtitle mb-2 text-muted">Week ${e.week}</h6>
 		</div>
 	  </div>`);
 	}
@@ -527,7 +526,9 @@ rhit.ImportantEventPageController = class {
 		// oldList.parentElement.appendChild(newListmon);
 	}
 	updateMonday(){
+		let importantThing = document.querySelector("#monImp");
 		const newList = htmlToElement('<div id="monImp"></div>');
+		importantThing.replaceWith(newList);
 		for(let i=0;i<rhit.fbEventsManager.length;i++){
 			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Monday") {
 				const e = rhit.fbEventsManager.getEventAtIndex(i);
