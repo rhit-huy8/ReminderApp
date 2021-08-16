@@ -11,6 +11,8 @@ rhit.fbEventsManager = null;
 rhit.FB_COLLECTION_USERS = "Users";
 rhit.FB_KEY_EMAIL = "emailAddress";
 rhit.FB_KEY_USERID = "uid";
+rhit.FB_KEY_FRIENDSLIST = "friendsList";
+rhit.FB_KEY_USERNAME = "name";
 
 rhit.WEEK = 0;
 
@@ -211,8 +213,8 @@ rhit.EventPageController = class {
 		const oldList = document.querySelector("#Event");
 		oldList.removeAttribute("id");
 		oldList.hidden = true;
-
 		oldList.parentElement.appendChild(newList);
+
 
 		//The Important icon
 		const importantButtons = document.querySelectorAll("#cardsImportant");
@@ -379,7 +381,6 @@ rhit.FBEventsManager = class{
 		);
 		return e;
 	  }
-	  //TODO: implement this method
 	  getEventWithID(id) { 
 		const docSnapshot = this._documentSnapshots[index];
 		const e = new rhit.Event(
@@ -419,6 +420,56 @@ rhit.ContactPageController = class {
 		document.querySelector("#menuImportant").addEventListener("click", (event) => {
 			window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
 		});
+		rhit.fbUserManager.beginListening(rhit.fbAuthManager.uid, this.updateView.bind(this));
+	}
+	updateView(){
+		console.log("trying to update");
+		const newList = htmlToElement('<div id="detailContacts"></div>');
+		console.log(rhit.fbAuthManager.uid);
+		//TODO: how to get specific data id?
+		let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
+		docRef.get().then((doc) => {
+			if (doc.exists) {
+				//making friends list array
+				let friends = [];
+				for(let i=0;i<doc.get(rhit.FB_KEY_FRIENDSLIST).length;i++){
+					//TODO: append email to array, can't get key
+					console.log( doc.get(rhit.FB_KEY_FRIENDSLIST)[i]);
+					friends.push(`${doc.get(rhit.FB_KEY_FRIENDSLIST)[i].get("email")}`);
+				}
+				console.log('friends :>> ', friends);
+
+				//display cards
+				for(let j=0;j<friends.length;j++){
+					//TODO: implment onclick and display cards
+					const person = new rhit.Person("taylor",friends[j]);
+					const newCard = this._createContactCard(person);
+					newList.appendChild(newCard);
+					console.log(newCard);
+				}
+
+			} else {
+				console.log("No such document!");
+			}
+		}).catch((error) => {
+			console.log("Error getting document:", error);
+		});
+
+	}
+
+	_createContactCard(person){
+		return htmlToElement(`<div class="card">
+		<div class="card-body">
+		  <h5 class="card-title">${person.name}</h5>
+		  <h6 class="card-subtitle mb-2 text-muted">${person.email}</h6>
+		</div>
+	  </div>`);
+	}
+}
+rhit.Person = class{
+	constructor(name,email){
+		this.name = name;
+		this.email = email;
 	}
 }
 
@@ -444,27 +495,33 @@ rhit.ImportantEventPageController = class {
 		<div class="card-body">
 		  <h5 class="card-title">${e.name}</h5>
 		  <h6 class="card-subtitle mb-2 text-muted">${e.time}</h6>
+		  <h6 class="card-subtitle mb-2 text-muted">${e.week}</h6>
 		</div>
 	  </div>`);
 	}
+	//TODO: need fixs
 	updateImportantList(){
 		console.log("update something!");
-		const newList = htmlToElement('<div id="Event"></div>');
-		
-		for(let i=0;i<rhit.fbEventsManager.length;i++){
-			if(rhit.fbEventsManager.getEventAtIndex(i).important) {
-				const e = rhit.fbEventsManager.getEventAtIndex(i);
-				const newCard = this._createImportantCard(e);
-				
-				newList.appendChild(newCard);
-			}
-		}
+		//const newList = htmlToElement('<div id="ImportantEvents"></div>');
+		this.updateMon();
 		//remove the old one nad put the new one.
-		const oldList = document.querySelector("#ImportantEvents");
+		// const oldList = document.querySelector("#monImp");
 		// oldList.removeAttribute("id");
 		// oldList.hidden = true;
 
-		oldList.parentElement.appendChild(newList);
+		// oldList.parentElement.appendChild(newListmon);
+	}
+	updateMon(){
+		const newList = htmlToElement('<div id="monImp"></div>');
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Monday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const week = e.week;
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
 	}
 }
 
@@ -517,6 +574,37 @@ rhit.FbAuthManager = class {
 	}
 }
 
+rhit.FbUserManager = class {
+	constructor() {
+		this._collectoinRef = firebase.firestore().collection(rhit.FB_COLLECTION_USERS);
+		this._document = null;
+	}
+	beginListening(uid, changeListener) {
+		console.log("Listening for uid", uid);
+		let query = this._collectoinRef;
+		query = query.where(rhit.FB_KEY_USERID,"==",uid);
+		this._unsubscribe = query.onSnapshot((querySnapshot)=>{
+
+			this._documentSnapshots = querySnapshot.docs;
+			changeListener();
+	});
+		
+	}
+
+	get isListening() {
+		return !!this._unsubscribe;
+	}
+
+	stopListening() {
+		this._unsubscribe();
+	}
+
+	get email() {
+		return this._document.get(rhit.FB_KEY_EMAIL);
+	}
+
+}
+
 
 rhit.checkForRedirects=function(){
 	if(document.querySelector("#indexPage") && rhit.fbAuthManager.isSignedIn){
@@ -529,7 +617,7 @@ rhit.checkForRedirects=function(){
 };
 
 rhit.main = function () {
-
+	rhit.fbUserManager = new rhit.FbUserManager();
 	rhit.fbAuthManager = new rhit.FbAuthManager();
 	rhit.fbAuthManager.beginListening(() => {
 		//console.log("uid: ", rhit.fbAuthManager.uid);
