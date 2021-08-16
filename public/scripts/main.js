@@ -424,22 +424,24 @@ rhit.ContactPageController = class {
 	}
 	updateView(){
 		console.log("trying to update");
+		let contactsDiv = document.querySelector("#detailContacts");
 		const newList = htmlToElement('<div id="detailContacts"></div>');
+		//oldElement.replaceWith(newElement);
+		contactsDiv.replaceWith(newList);
 		console.log(rhit.fbAuthManager.uid);
 		//TODO: how to get specific data id?
 		let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
 		docRef.get().then((doc) => {
 			if (doc.exists) {
-				//making friends list array
+				
 				let friends = [];
 				for(let i=0;i<doc.get(rhit.FB_KEY_FRIENDSLIST).length;i++){
-					//TODO: append email to array, can't get key
 					console.log( doc.get(rhit.FB_KEY_FRIENDSLIST)[i]);
-					friends.push(`${doc.get(rhit.FB_KEY_FRIENDSLIST)[i].get("email")}`);
+					friends.push(doc.get(rhit.FB_KEY_FRIENDSLIST)[i]["email"]);
 				}
 				console.log('friends :>> ', friends);
 
-				//display cards
+				
 				for(let j=0;j<friends.length;j++){
 					//TODO: implment onclick and display cards
 					const person = new rhit.Person("taylor",friends[j]);
@@ -461,6 +463,19 @@ rhit.ContactPageController = class {
 		return htmlToElement(`<div class="card">
 		<div class="card-body">
 		  <h5 class="card-title">${person.name}</h5>
+
+		<div  style="margin-bottom: 10px" class="dropdown">
+		  <button id="cardsDropDown" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Action
+		  </button>
+	  		<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+				<button id="contactEdit" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i class="material-icons">edit</i>&nbsp;&nbsp;&nbsp;Can Edit</button>
+				<button id="contactView" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Can View</button>
+				<button id="contactDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
+	 		 </div>
+		</div>
+
+
 		  <h6 class="card-subtitle mb-2 text-muted">${person.email}</h6>
 		</div>
 	  </div>`);
@@ -503,7 +518,7 @@ rhit.ImportantEventPageController = class {
 	updateImportantList(){
 		console.log("update something!");
 		//const newList = htmlToElement('<div id="ImportantEvents"></div>');
-		this.updateMon();
+		this.updateMonday();
 		//remove the old one nad put the new one.
 		// const oldList = document.querySelector("#monImp");
 		// oldList.removeAttribute("id");
@@ -511,7 +526,7 @@ rhit.ImportantEventPageController = class {
 
 		// oldList.parentElement.appendChild(newListmon);
 	}
-	updateMon(){
+	updateMonday(){
 		const newList = htmlToElement('<div id="monImp"></div>');
 		for(let i=0;i<rhit.fbEventsManager.length;i++){
 			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Monday") {
