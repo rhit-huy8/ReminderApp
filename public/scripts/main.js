@@ -440,9 +440,16 @@ rhit.ContactPageController = class {
 				}
 				console.log('friends :>> ', friends);
 
-				
+
 				for(let j=0;j<friends.length;j++){
 					//TODO: implment onclick and display cards
+					const name = document.querySelector("#inputContact").value;
+					const email = document.querySelector("#inputEmail").value;
+					document.querySelector("#submitAddContact").onclick = (() => {
+						console.log(name);
+					});
+
+					
 					const person = new rhit.Person("taylor",friends[j]);
 					const newCard = this._createContactCard(person);
 					newList.appendChild(newCard);
@@ -516,14 +523,8 @@ rhit.ImportantEventPageController = class {
 	//TODO: need fixs
 	updateImportantList(){
 		console.log("update something!");
-		//const newList = htmlToElement('<div id="ImportantEvents"></div>');
 		this.updateMonday();
-		//remove the old one nad put the new one.
-		// const oldList = document.querySelector("#monImp");
-		// oldList.removeAttribute("id");
-		// oldList.hidden = true;
 
-		// oldList.parentElement.appendChild(newListmon);
 	}
 	updateMonday(){
 		let importantThing = document.querySelector("#monImp");
