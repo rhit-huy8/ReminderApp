@@ -181,7 +181,7 @@ rhit.EventPageController = class {
 		  		<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 					<button id="cardsEdit" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i class="material-icons">edit</i>&nbsp;&nbsp;&nbsp;Edit</button>
 					<button id="cardsDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
-					<button id="cardsImportant" class="dropdown-item" type="button"><i id="importance" class="material-icons">star_border</i>&nbsp;&nbsp;&nbsp;Important</button>
+					<button id="cardsImportant" class="dropdown-item" type="button"><i id="importance${e.id}" class="material-icons">star_border</i>&nbsp;&nbsp;&nbsp;Important</button>
 		  		</div>
 			</div>
 		</div>
@@ -223,22 +223,20 @@ rhit.EventPageController = class {
 				console.log('id :>> ', id);
 				this.updateImportance(id);
 				//update html as well
-				let text = document.querySelector("#importance").innerHTML;
-				if(text == "star"){
-					text = "star_border";
-					console.log(text);
-				}else{
-					text = "star_border";
-					console.log(text);
-				}
+				let text = document.querySelector(`#importance${id}`).innerHTML;
+				console.log(text);
+				this.updateIcon(text,id);
 			};
 		}
+
 		//delete icon
 		const deleteButtons = document.querySelectorAll("#cardsDelete");
 		for(let i=0; i<deleteButtons.length; i++){
 			deleteButtons[i].onclick = (event) =>{
 				console.log("pressed delete");
 				//TODO: implement delete
+				const id = document.getElementsByClassName("card-title")[i].id;
+				this.delete(id);
 			};
 		}
 		//edit icon
@@ -271,7 +269,23 @@ rhit.EventPageController = class {
 			console.log(documentSnapshot.get(rhit.FB_KEY_IMPORTANT));
 		});
 	}
+	//TODO:needs fix
+	updateIcon(text,id){
+		if(text == "star"){
+			document.querySelector(`#importance${id}`).innerHTML = "star_border";
+			console.log(document.querySelector(`#importance${id}`).innerHTML);
+		}else{
+			document.querySelector(`#importance${id}`).innerHTML = "star";
+			console.log(document.querySelector(`#importance${id}`).innerHTML);
+		}
+	}
 
+	delete(id) {
+		let ref = firebase.firestore().collection(rhit.FB_COLLECTION_EVENTS).doc(id);
+		ref.delete().then(()=>{
+			console.log("Document deleted!");
+		});
+	 }
 }
 
 rhit.FBEventsManager = class{
