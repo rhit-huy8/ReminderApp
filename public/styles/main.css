@@ -80,7 +80,9 @@ h2{
 .bmd-layout-content, #Days, #Weeks, #Contacts, #Event, #ImportantEvents {
     height: 100vh;
 }
-
+#ImportantEvents{
+    margin-bottom: 1000px;
+}
 #Event {
     margin-top: 5em;
 }

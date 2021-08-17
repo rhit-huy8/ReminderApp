@@ -183,7 +183,7 @@ rhit.EventPageController = class {
 		  		<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
 					<button id="cardsEdit" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i class="material-icons">edit</i>&nbsp;&nbsp;&nbsp;Edit</button>
 					<button id="cardsDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
-					<button id="cardsImportant" class="dropdown-item" type="button"><i id="importance${e.id}" class="material-icons">star_border</i>&nbsp;&nbsp;&nbsp;Important</button>
+					<button id="cardsImportant" class="dropdown-item" type="button"><i id="importanceIcon${e.id}" class="material-icons">star_border</i>&nbsp;&nbsp;&nbsp;Important</button>
 		  		</div>
 			</div>
 		</div>
@@ -225,7 +225,7 @@ rhit.EventPageController = class {
 				console.log('id :>> ', id);
 				this.updateImportance(id);
 				//update html as well
-				let text = document.querySelector(`#importance${id}`).innerHTML;
+				let text = document.querySelector(`#importanceIcon${id}`).innerHTML;
 				console.log(text);
 				this.updateIcon(text,id);
 			};
@@ -279,13 +279,13 @@ rhit.EventPageController = class {
 	}
 	//TODO:needs fix
 	updateIcon(text,id){
-
+		const theId = document.querySelector(`#importanceIcon${id}`);
 		if(text == "star"){
-			document.querySelector(`#importance${id}`).innerHTML = "star_border";
-			console.log(document.querySelector(`#importance${id}`).innerHTML);
+			theId.innerHTML = "star_border";
+			console.log(theId.innerHTML);
 		}else{
-			document.querySelector(`#importance${id}`).innerHTML = "star";
-			console.log(document.querySelector(`#importance${id}`).innerHTML);
+			theId.innerHTML = "star";
+			console.log(theId.innerHTML);
 		}
 	}
 
@@ -422,15 +422,33 @@ rhit.ContactPageController = class {
 		});
 		rhit.fbUserManager.beginListening(rhit.fbAuthManager.uid, this.updateView.bind(this));
 	}
-	updateView(){
+	async getDocId(uid){
+		console.log("called getDocId");
+		let documents = rhit.fbUserManager._collectoinRef.where("uid", "==", uid);
+		let documentId;
+		await documents.get().then((querySnapshot) => {
+			querySnapshot.forEach((doc) => {
+				console.log(doc.id);
+				documentId =  doc.id;
+			});
+		})
+		.catch((error) => {
+			console.log("Error getting documents: ", error);
+		});
+		return documentId;
+	}
+	async updateView(){
 		console.log("trying to update");
 		let contactsDiv = document.querySelector("#detailContacts");
 		const newList = htmlToElement('<div id="detailContacts"></div>');
 		//oldElement.replaceWith(newElement);
 		contactsDiv.replaceWith(newList);
 		console.log(rhit.fbAuthManager.uid);
-		//TODO: how to get specific data id?
-		let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
+
+		//TODO: implement promise?
+		let docRef = rhit.fbUserManager._collectoinRef.doc(await this.getDocId(rhit.fbAuthManager.uid));
+		//accessing the user's friend's list
+		//let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
 		docRef.get().then((doc) => {
 			if (doc.exists) {
 				let friends = [];
@@ -440,19 +458,15 @@ rhit.ContactPageController = class {
 				}
 				console.log('friends :>> ', friends);
 
+				this.addFriends(friends,doc);
 
 				for(let j=0;j<friends.length;j++){
-					//TODO: implment onclick and display cards
-					const name = document.querySelector("#inputContact").value;
-					const email = document.querySelector("#inputEmail").value;
-					document.querySelector("#submitAddContact").onclick = (() => {
-						console.log(name);
-					});
-
-					
+					//Done: implment onclick(edit and view) 
 					const person = new rhit.Person("taylor",friends[j]);
 					const newCard = this._createContactCard(person);
 					newList.appendChild(newCard);
+					//change edit and view html and authorization
+					this.changeEditAndView(person,doc.get(rhit.FB_KEY_FRIENDSLIST));
 					console.log(newCard);
 				}
 
@@ -464,7 +478,81 @@ rhit.ContactPageController = class {
 		});
 
 	}
+	addFriends(friends,user){
+		const name = document.querySelector("#inputContact").value;
+		const email = document.querySelector("#inputEmail").value;
+		document.querySelector("#submitAddContact").onclick = (() => {
 
+			//check if it exists
+			let users =  firebase.firestore().collection(rhit.FB_COLLECTION_USERS);
+			users.onSnapshot((querySnapshot)=>{
+				querySnapshot.forEach(function(doc) {
+					console.log(doc.data().emailAddress);
+					//if it does
+					if(doc.data().emailAddress == document.querySelector("#inputEmail").value){
+						//add to friends list
+						friends.push(document.querySelector("#inputEmail").value);
+						//pass the info into firestore
+						//TODO: set    (friendsList[?])
+
+						// Get the firends list array, save it to a variable
+						// Create a new map for the new firned (e.g. { "dmail" => document.whatever, name: "..."})
+						// Add the new map to the array
+						// Then save the modified array to firestore
+						user.get(rhit.FB_KEY_FRIENDSLIST).push()
+						user.update({
+							"friendsList.name": document.querySelector("#inputContact").value,
+							"friendsList.email": document.querySelector("#inputEmail").value,
+						})
+						.then(() => {
+							console.log("Document successfully updated!");
+						})
+						.catch(() => {
+							console.log("Document didn't update");
+						});
+					}
+				});
+			});
+
+
+		});
+	}
+	changeEditAndView(person,friendList){
+		for (let i = 0; i < friendList.length; i++) {
+			//edit
+			document.getElementById(`contactEdit${person.email}`).onclick = (() => {
+				if (friendList[i]["email"] == person.email && friendList[i]["edit"]) {
+					console.log(friendList[i]["edit"]);
+					//change html
+					document.getElementById(`editIcon${person.email}`).innerHTML = "done";
+					//change the data in firestore
+					friendList[i]["edit"] = false;
+				} else if (friendList[i]["email"] == person.email && !friendList[i]["edit"]) {
+					console.log(friendList[i]["edit"]);
+					//change html
+					document.getElementById(`editIcon${person.email}`).innerHTML = "";
+					//change the data in firestore
+					friendList[i]["edit"] = true;
+				}
+			});
+			//view
+			document.getElementById(`contactView${person.email}`).onclick = (() => {
+				if (friendList[i]["email"] == person.email && friendList[i]["view"]) {
+					console.log(friendList[i]["view"]);
+					//change html
+					document.getElementById(`viewIcon${person.email}`).innerHTML = "done";
+					//change the data in firestore
+					friendList[i]["view"] = false;
+				} else if (friendList[i]["email"] == person.email && !friendList[i]["view"]) {
+					console.log(friendList[i]["view"]);
+					//change html
+					document.getElementById(`viewIcon${person.email}`).innerHTML = "";
+					//change the data in firestore
+					friendList[i]["view"] = true;
+				}
+			});
+		}
+	}
 	_createContactCard(person){
 		return htmlToElement(`<div class="card">
 		<div class="card-body">
@@ -475,8 +563,10 @@ rhit.ContactPageController = class {
 			Action
 		  </button>
 	  		<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-				<button id="contactEdit" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i class="material-icons">edit</i>&nbsp;&nbsp;&nbsp;Can Edit</button>
-				<button id="contactView" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Can View</button>
+				<button id="contactEdit${person.email}" class="dropdown-item" type="button" data-toggle="modal" data-target="#editEvents"><i id="editIcon${person.email}" class="material-icons"></i>&nbsp;&nbsp;&nbsp;Can Edit</button>
+				<button id="contactView${person.email}" class="dropdown-item" type="button"><i id="viewIcon${person.email}" class="material-icons"><span class="material-icons">
+				
+				</span></i>&nbsp;&nbsp;&nbsp;Can View</button>
 				<button id="contactDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
 	 		 </div>
 		</div>
@@ -520,20 +610,102 @@ rhit.ImportantEventPageController = class {
 		</div>
 	  </div>`);
 	}
-	//TODO: need fixs
+	//update cards
 	updateImportantList(){
 		console.log("update something!");
 		this.updateMonday();
-
+		this.updateTuesday();
+		this.updateWednesday();
+		this.updateThursday();
+		this.updateFriday();
+		this.updateSaturday();
+		this.updateSunday();
 	}
 	updateMonday(){
-		let importantThing = document.querySelector("#monImp");
+		let importantThingMon = document.querySelector("#monImp");
 		const newList = htmlToElement('<div id="monImp"></div>');
-		importantThing.replaceWith(newList);
+		importantThingMon.replaceWith(newList);
 		for(let i=0;i<rhit.fbEventsManager.length;i++){
 			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Monday") {
 				const e = rhit.fbEventsManager.getEventAtIndex(i);
-				const week = e.week;
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateTuesday(){
+		let importantThingTues = document.querySelector("#tuesImp");
+		const newList = htmlToElement('<div id="tuesImp"></div>');
+		importantThingTues.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Tuesday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateWednesday(){
+		let importantThingWed = document.querySelector("#wedImp");
+		const newList = htmlToElement('<div id="wedImp"></div>');
+		importantThingWed.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Wednesday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateThursday(){
+		let importantThingThursday = document.querySelector("#thursImp");
+		const newList = htmlToElement('<div id="tuesImp"></div>');
+		importantThingThursday.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Thursday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateFriday(){
+		let importantThingFri = document.querySelector("#friImp");
+		const newList = htmlToElement('<div id="friImp"></div>');
+		importantThingFri.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Friday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateSaturday(){
+		let importantThingSat = document.querySelector("#satImp");
+		const newList = htmlToElement('<div id="satImp"></div>');
+		importantThingSat.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Saturday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
+				const newCard = this._createImportantCard(e);
+				console.log(newList);
+				newList.appendChild(newCard);
+			}
+		}
+	}
+	updateSunday(){
+		let importantThingSun = document.querySelector("#sunImp");
+		const newList = htmlToElement('<div id="sunImp"></div>');
+		importantThingSun.replaceWith(newList);
+		for(let i=0;i<rhit.fbEventsManager.length;i++){
+			if(rhit.fbEventsManager.getEventAtIndex(i).important &&rhit.fbEventsManager.getEventAtIndex(i).day=="Sunday") {
+				const e = rhit.fbEventsManager.getEventAtIndex(i);
 				const newCard = this._createImportantCard(e);
 				console.log(newList);
 				newList.appendChild(newCard);
@@ -607,6 +779,29 @@ rhit.FbUserManager = class {
 	});
 		
 	}
+	//TODO: need major work
+	addNewUserMaybe(uid,email) {
+		// First check if the user already exists.
+		console.log("Checking User for uid = ", uid);
+		//Can I check document's uid to see if they exist?
+		const userRef = this._collectoinRef.doc(uid);
+		return userRef.get().then((document) => {
+			if (document.exists) {
+				console.log("User already exists.  Do nothing");
+				return false; // This will be the parameter to the next .then callback function.
+			} else {
+				// We need to create this user.
+				console.log("Creating the user!");
+				return userRef.set({
+					[rhit.FB_KEY_EMAIL]: email,
+					[rhit.FB_KEY_FRIENDSLIST]:[],
+					[rhit.FB_KEY_USERID]: uid
+				}).then(() => {
+					return true;
+				});
+			}
+		});
+	}
 
 	get isListening() {
 		return !!this._unsubscribe;
@@ -620,6 +815,20 @@ rhit.FbUserManager = class {
 		return this._document.get(rhit.FB_KEY_EMAIL);
 	}
 
+}
+
+rhit.createUserObjectIfNeeded = function () {
+	return new Promise((resolve, reject) => {
+		if (!rhit.fbAuthManager.isSignedIn) {
+			console.log("Nobody is signed in.  No need to check if this is a new User");
+			resolve(false);
+			return;
+		}
+		rhit.fbUserManager.addNewUserMaybe(
+			rhit.fbAuthManager.uid).then((wasUserAdded) => {
+			resolve(wasUserAdded);
+		});
+	});
 }
 
 
@@ -638,6 +847,10 @@ rhit.main = function () {
 	rhit.fbAuthManager = new rhit.FbAuthManager();
 	rhit.fbAuthManager.beginListening(() => {
 		//console.log("uid: ", rhit.fbAuthManager.uid);
+		// rhit.createUserObjectIfNeeded().then((isUserNew) => {
+		// 	console.log('isUserNew :>> ', isUserNew);
+
+		// });
 		rhit.checkForRedirects();
 		rhit.initializePage();
 	});
