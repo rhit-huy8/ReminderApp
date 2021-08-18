@@ -445,10 +445,8 @@ rhit.ContactPageController = class {
 		contactsDiv.replaceWith(newList);
 		console.log(rhit.fbAuthManager.uid);
 
-		//TODO: implement promise?
 		let docRef = rhit.fbUserManager._collectoinRef.doc(await this.getDocId(rhit.fbAuthManager.uid));
-		//accessing the user's friend's list
-		//let docRef = rhit.fbUserManager._collectoinRef.doc("bJyGl09HDiTr85pZoxX9");
+		
 		docRef.get().then((doc) => {
 			if (doc.exists) {
 				let friends = [];
@@ -462,11 +460,14 @@ rhit.ContactPageController = class {
 
 				for(let j=0;j<friends.length;j++){
 					//Done: implment onclick(edit and view) 
-					const person = new rhit.Person("taylor",friends[j]);
+					const person = new rhit.Person(doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"],friends[j],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["uid"]);
 					const newCard = this._createContactCard(person);
 					newList.appendChild(newCard);
 					//change edit and view html and authorization
 					this.changeEditAndView(person,doc.get(rhit.FB_KEY_FRIENDSLIST));
+					//change page
+					this.changePage(person,doc);
+
 					console.log(newCard);
 				}
 
@@ -482,27 +483,38 @@ rhit.ContactPageController = class {
 		const name = document.querySelector("#inputContact").value;
 		const email = document.querySelector("#inputEmail").value;
 		document.querySelector("#submitAddContact").onclick = (() => {
-
+			
 			//check if it exists
 			let users =  firebase.firestore().collection(rhit.FB_COLLECTION_USERS);
 			users.onSnapshot((querySnapshot)=>{
 				querySnapshot.forEach(function(doc) {
-					console.log(doc.data().emailAddress);
+					console.log(typeof doc.data().emailAddress);
+					console.log('object :>>',typeof document.querySelector("#inputEmail").value);
+					console.log(doc.data().emailAddress == document.querySelector("#inputEmail").value);
 					//if it does
 					if(doc.data().emailAddress == document.querySelector("#inputEmail").value){
 						//add to friends list
 						friends.push(document.querySelector("#inputEmail").value);
 						//pass the info into firestore
-						//TODO: set    (friendsList[?])
-
 						// Get the firends list array, save it to a variable
+						let updatedList = friends;
 						// Create a new map for the new firned (e.g. { "dmail" => document.whatever, name: "..."})
+						const personInfo = new Map();
+						personInfo.set("email",document.querySelector("#inputEmail").value);
+						personInfo.set("name",document.querySelector("#inputContact").value);
+						personInfo.set("view",false);
+						personInfo.set("edit", false);
+						for(let k=0; k<user.get(rhit.FB_KEY_FRIENDSLIST).length;k++){
+							console.log(user.get(rhit.FB_KEY_FRIENDSLIST)[k]);
+							updatedList.push(user.get(rhit.FB_KEY_FRIENDSLIST)[k]);
+						}
 						// Add the new map to the array
+						updatedList.push(personInfo);
+						console.log(updatedList);
 						// Then save the modified array to firestore
-						user.get(rhit.FB_KEY_FRIENDSLIST).push()
+						//TODO: error: update is not a function.
 						user.update({
-							"friendsList.name": document.querySelector("#inputContact").value,
-							"friendsList.email": document.querySelector("#inputEmail").value,
+							[rhit.FB_KEY_FRIENDSLIST]: updatedList,
 						})
 						.then(() => {
 							console.log("Document successfully updated!");
@@ -556,7 +568,7 @@ rhit.ContactPageController = class {
 	_createContactCard(person){
 		return htmlToElement(`<div class="card">
 		<div class="card-body">
-		  <h5 class="card-title">${person.name}</h5>
+		  <a id="link${person.uid}" style="font-size:20px" class="card-title">${person.name}</a>
 
 		<div  style="margin-bottom: 10px" class="dropdown">
 		  <button id="cardsDropDown" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -576,11 +588,36 @@ rhit.ContactPageController = class {
 		</div>
 	  </div>`);
 	}
+	changePage(person,self){
+		document.getElementById(`link${person.uid}`).onclick = (() => {
+			
+			console.log("trying to change page");
+			//redirecting if have the permission
+			firebase.firestore().collection(rhit.FB_COLLECTION_USERS).onSnapshot((querySnapshot)=>{
+				//check if have the permission
+				querySnapshot.forEach(function(doc){
+					if(doc.get(rhit.FB_KEY_EMAIL)==person.email){
+						console.log("email same");
+						for(let a=0;a<doc.get(rhit.FB_KEY_FRIENDSLIST).length;a++){
+							console.log(doc.get(rhit.FB_KEY_FRIENDSLIST)[a]["view"]==true);
+							if(doc.get(rhit.FB_KEY_FRIENDSLIST)[a]["view"]==true){
+								console.log("should redirect me");
+								
+								window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
+
+							}
+						}
+					}
+				});
+			});
+		});
+	}
 }
 rhit.Person = class{
-	constructor(name,email){
+	constructor(name,email,uid){
 		this.name = name;
 		this.email = email;
+		this.uid = uid
 	}
 }
 
