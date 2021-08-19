@@ -482,10 +482,7 @@ rhit.ContactPageController = class {
 		});
 
 	}
-<<<<<<< HEAD
 	
-=======
->>>>>>> d040faea8e2c86d012d913e5e26b8dea2d6f4e6d
 	addFriends(friends,writableUser,user){
 
 		document.querySelector("#submitAddContact").onclick = (() => {
