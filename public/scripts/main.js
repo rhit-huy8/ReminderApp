@@ -277,7 +277,7 @@ rhit.EventPageController = class {
 			console.log(documentSnapshot.get(rhit.FB_KEY_IMPORTANT));
 		});
 	}
-	//TODO:needs fix
+
 	updateIcon(text,id){
 		const theId = document.querySelector(`#importanceIcon${id}`);
 		if(text == "star"){
@@ -455,8 +455,8 @@ rhit.ContactPageController = class {
 					friends.push(doc.get(rhit.FB_KEY_FRIENDSLIST)[i]["email"]);
 				}
 				console.log('friends :>> ', friends);
-
-				this.addFriends(friends,doc);
+				const writableDoc = rhit.fbUserManager._collectoinRef.doc(doc.id)
+				this.addFriends(friends,writableDoc);
 
 				for(let j=0;j<friends.length;j++){
 					//Done: implment onclick(edit and view) 
@@ -467,7 +467,8 @@ rhit.ContactPageController = class {
 					this.changeEditAndView(person,doc.get(rhit.FB_KEY_FRIENDSLIST));
 					//change page
 					this.changePage(person,doc);
-
+					//delete friends
+					this.delete(person,writableDoc,doc);
 					console.log(newCard);
 				}
 
@@ -579,7 +580,7 @@ rhit.ContactPageController = class {
 				<button id="contactView${person.email}" class="dropdown-item" type="button"><i id="viewIcon${person.email}" class="material-icons"><span class="material-icons">
 				
 				</span></i>&nbsp;&nbsp;&nbsp;Can View</button>
-				<button id="contactDelete" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
+				<button id="contactDelete${person.email}" class="dropdown-item" type="button"><i class="material-icons">delete</i>&nbsp;&nbsp;&nbsp;Delete</button>
 	 		 </div>
 		</div>
 
@@ -603,13 +604,27 @@ rhit.ContactPageController = class {
 							if(doc.get(rhit.FB_KEY_FRIENDSLIST)[a]["view"]==true){
 								console.log("should redirect me");
 								
-								window.location.href= `/importantevent.html?uid=${rhit.fbAuthManager.uid}`;
+								window.location.href= `/importantevent.html?uid=${person.uid}`;
 
 							}
 						}
 					}
 				});
 			});
+		});
+	}
+	delete(person,writableUser,user){
+		document.getElementById(`contactDelete${person.email}`).onclick =(() => {
+			console.log(user);
+			for(let b=0;b<user[rhit.FB_KEY_FRIENDSLIST].length;b++){
+				console.log(user.id);
+				if(user.get(rhit.FB_KEY_FRIENDSLIST)[b]["email"]==person.email){
+					//TODO: update is not a function
+					user.update({
+						[rhit.FB_KEY_FRIENDSLIST]: firebase.firestore.FieldValue.arrayRemove(user.get(rhit.FB_KEY_FRIENDSLIST)[b]),
+					});
+				}
+			}
 		});
 	}
 }
