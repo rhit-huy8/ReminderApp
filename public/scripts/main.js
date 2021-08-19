@@ -455,12 +455,14 @@ rhit.ContactPageController = class {
 					friends.push(doc.get(rhit.FB_KEY_FRIENDSLIST)[i]["email"]);
 				}
 				console.log('friends :>> ', friends);
+				
 				const writableDoc = rhit.fbUserManager._collectoinRef.doc(doc.id)
-				this.addFriends(friends,writableDoc);
+				this.addFriends(friends,writableDoc,doc);
 
 				for(let j=0;j<friends.length;j++){
 					//Done: implment onclick(edit and view) 
-					const person = new rhit.Person(doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"],friends[j],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["uid"]);
+					const person = new rhit.Person(doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["email"],friends[j],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["uid"]);
+					console.log('person.name :>> ', doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"]);
 					const newCard = this._createContactCard(person);
 					newList.appendChild(newCard);
 					//change edit and view html and authorization
@@ -480,17 +482,16 @@ rhit.ContactPageController = class {
 		});
 
 	}
-	addFriends(friends,user){
-		const name = document.querySelector("#inputContact").value;
-		const email = document.querySelector("#inputEmail").value;
+	addFriends(friends,writableUser,user){
+
 		document.querySelector("#submitAddContact").onclick = (() => {
 			
 			//check if it exists
 			let users =  firebase.firestore().collection(rhit.FB_COLLECTION_USERS);
 			users.onSnapshot((querySnapshot)=>{
 				querySnapshot.forEach(function(doc) {
-					console.log(typeof doc.data().emailAddress);
-					console.log('object :>>',typeof document.querySelector("#inputEmail").value);
+					console.log(doc.data().emailAddress);
+					console.log(document.querySelector("#inputEmail").value);
 					console.log(doc.data().emailAddress == document.querySelector("#inputEmail").value);
 					//if it does
 					if(doc.data().emailAddress == document.querySelector("#inputEmail").value){
@@ -498,24 +499,29 @@ rhit.ContactPageController = class {
 						friends.push(document.querySelector("#inputEmail").value);
 						//pass the info into firestore
 						// Get the firends list array, save it to a variable
-						let updatedList = friends;
-						// Create a new map for the new friend (e.g. { "email" => document.whatever, name: "..."})
+						let updatedList = user.get(rhit.FB_KEY_FRIENDSLIST);
+						// Create a new map for the new firned (e.g. { "dmail" => document.whatever, name: "..."})
 						const personInfo = new Map();
 						personInfo.set("email",document.querySelector("#inputEmail").value);
 						personInfo.set("name",document.querySelector("#inputContact").value);
 						personInfo.set("view",false);
 						personInfo.set("edit", false);
+						
 						for(let k=0; k<user.get(rhit.FB_KEY_FRIENDSLIST).length;k++){
 							console.log(user.get(rhit.FB_KEY_FRIENDSLIST)[k]);
 							updatedList.push(user.get(rhit.FB_KEY_FRIENDSLIST)[k]);
 						}
 						// Add the new map to the array
-						updatedList.push(personInfo);
-						console.log(updatedList);
+						const newPersonInfo = {	"name":document.querySelector("#inputContact").value,
+												"email":document.querySelector("#inputEmail").value,
+												"view": false, "edit":false,
+												"uid":doc.data().uid};
+						console.log('newPersonInfo :>> ', newPersonInfo);
+						updatedList.push(newPersonInfo);
 						// Then save the modified array to firestore
-						//TODO: error: update is not a function.
-						user.update({
-							[rhit.FB_KEY_FRIENDSLIST]: updatedList,
+						console.log(updatedList);
+						writableUser.update({
+							[rhit.FB_KEY_FRIENDSLIST]: updatedList
 						})
 						.then(() => {
 							console.log("Document successfully updated!");
@@ -616,11 +622,10 @@ rhit.ContactPageController = class {
 	delete(person,writableUser,user){
 		document.getElementById(`contactDelete${person.email}`).onclick =(() => {
 			console.log(user);
-			for(let b=0;b<user[rhit.FB_KEY_FRIENDSLIST].length;b++){
+			for(let b=0;b<user.get(rhit.FB_KEY_FRIENDSLIST).length;b++){
 				console.log(user.id);
 				if(user.get(rhit.FB_KEY_FRIENDSLIST)[b]["email"]==person.email){
-					//TODO: update is not a function
-					user.update({
+					writableUser.update({
 						[rhit.FB_KEY_FRIENDSLIST]: firebase.firestore.FieldValue.arrayRemove(user.get(rhit.FB_KEY_FRIENDSLIST)[b]),
 					});
 				}
