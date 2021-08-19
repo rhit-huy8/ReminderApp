@@ -499,7 +499,7 @@ rhit.ContactPageController = class {
 						//pass the info into firestore
 						// Get the firends list array, save it to a variable
 						let updatedList = friends;
-						// Create a new map for the new firned (e.g. { "dmail" => document.whatever, name: "..."})
+						// Create a new map for the new friend (e.g. { "email" => document.whatever, name: "..."})
 						const personInfo = new Map();
 						personInfo.set("email",document.querySelector("#inputEmail").value);
 						personInfo.set("name",document.querySelector("#inputContact").value);
