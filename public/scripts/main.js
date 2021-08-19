@@ -461,13 +461,14 @@ rhit.ContactPageController = class {
 
 				for(let j=0;j<friends.length;j++){
 					//Done: implment onclick(edit and view) 
-					const person = new rhit.Person(doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["email"],friends[j],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["uid"]);
+					const person = new rhit.Person(doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["email"],doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["uid"]);
 					console.log('person.name :>> ', doc.get(rhit.FB_KEY_FRIENDSLIST)[j]["name"]);
 					const newCard = this._createContactCard(person);
 					newList.appendChild(newCard);
 					//change edit and view html and authorization
 					this.changeEditAndView(person,doc.get(rhit.FB_KEY_FRIENDSLIST));
 					//change page
+					console.log('person.uid :>> ', person.uid);
 					this.changePage(person,doc);
 					//delete friends
 					this.delete(person,writableDoc,doc);
@@ -610,7 +611,6 @@ rhit.ContactPageController = class {
 							console.log(doc.get(rhit.FB_KEY_FRIENDSLIST)[a]["view"]==true);
 							if(doc.get(rhit.FB_KEY_FRIENDSLIST)[a]["view"]==true){
 								console.log("should redirect me");
-								
 								window.location.href= `/importantevent.html?uid=${person.uid}`;
 
 							}
